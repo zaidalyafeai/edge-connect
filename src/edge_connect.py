@@ -9,7 +9,7 @@ from .metrics import PSNR, EdgeAccuracy
 
 
 class EdgeConnect():
-    def __init__(self, config):
+    def __init__(self, config, img):
         self.config = config
 
         if config.MODEL == 1:
@@ -28,7 +28,8 @@ class EdgeConnect():
 
         self.psnr = PSNR(255.0).to(config.DEVICE)
         self.edgeacc = EdgeAccuracy(config.EDGE_THRESHOLD).to(config.DEVICE)
-
+        self.img = img 
+        
         # test mode
         if self.config.MODE == 2:
             self.test_dataset = Dataset(config, config.TEST_FLIST, config.TEST_EDGE_FLIST, config.TEST_MASK_FLIST, augment=False, training=False)
@@ -93,11 +94,11 @@ class EdgeConnect():
             # edge model
             if model == 1:
                 outputs = self.edge_model(images_gray, edges, masks)
-                print(edges)
                 outputs_merged = (outputs * masks) + (edges * (1 - masks))
 
             # inpaint model
             elif model == 2:
+                images = ([self.img]).to(self.config.DEVICE) 
                 outputs = self.inpaint_model(images, edges, masks)
                 #outputs_merged = (outputs * masks) + (images * (1 - masks))
                 outputs_merged = outputs
