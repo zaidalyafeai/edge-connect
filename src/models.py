@@ -251,6 +251,7 @@ class InpaintingModel(BaseModel):
         #maybe ignore the masks
         print('ignore masks')
         images_masked = images.float()
+        print(images_masked.shape, edges.shape)
         inputs = torch.cat((images_masked, edges), dim=1)
         outputs = self.generator(inputs)                                    # in: [rgb(3) + edge(1)]
         return outputs
