@@ -98,7 +98,13 @@ class EdgeConnect():
 
             # inpaint model
             elif model == 2:
-                images = ([self.img]).to(self.config.DEVICE) 
+                size = config.INPUT_SIZE
+                print(size)
+                images = cv2.resize(self.img, size)
+                print(images.shape)
+                images = torch.FloatTensor([images])
+                print(images.shape)
+                images = images.cuda() 
                 outputs = self.inpaint_model(images, edges, masks)
                 #outputs_merged = (outputs * masks) + (images * (1 - masks))
                 outputs_merged = outputs
