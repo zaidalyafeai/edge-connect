@@ -83,7 +83,7 @@ class EdgeConnect():
         )
 
         index = 0
-        outputs = []
+        output_images = []
         for items in test_loader:
             name = self.test_dataset.load_name(index)
             images, images_gray, edges, masks = self.cuda(*items)
@@ -110,7 +110,7 @@ class EdgeConnect():
             print(index, name)
 
             imsave(output, path)
-            outputs.append(output)
+            output_images.append(output)
           
             if self.debug:
                 edges = self.postprocess(1 - edges)[0]
@@ -121,7 +121,7 @@ class EdgeConnect():
                 imsave(masked, os.path.join(self.results_path, fname + '_masked.' + fext))
 
         print('\nEnd test....')
-        return outputs
+        return output_images
     def sample(self, it=None):
         # do not sample when validation set is empty
         if len(self.val_dataset) == 0:
