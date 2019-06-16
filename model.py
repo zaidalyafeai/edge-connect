@@ -59,7 +59,7 @@ class EdgeConnect_MODEL():
         print('done.')
     
     def fill(self, img):
-        outputs = self.model.test(np.array(img))
+        outputs = self.model.test(np.array(img)[:,:,::-1])
         output_image = outputs[0].cpu().numpy()
         print(output_image.dtype)
         return np.uint8(output_image)
