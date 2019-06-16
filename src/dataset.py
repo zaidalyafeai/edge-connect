@@ -30,8 +30,8 @@ class Dataset(torch.utils.data.Dataset):
 
         # in test mode, there's a one-to-one relationship between mask and image
         # masks are loaded non random
-        if config.MODE == 2:
-            self.mask = 6
+        #if config.MODE == 2:
+        #    self.mask = 6
 
     def __len__(self):
         return len(self.data)
