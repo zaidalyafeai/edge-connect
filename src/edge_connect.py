@@ -100,7 +100,7 @@ class EdgeConnect():
             elif model == 2:
                 size = self.config.INPUT_SIZE
                 print(size)
-                images = cv2.resize(self.img, size)
+                images = cv2.resize(self.img, (256, 256))
                 print(images.shape)
                 images = torch.FloatTensor([images])
                 print(images.shape)
