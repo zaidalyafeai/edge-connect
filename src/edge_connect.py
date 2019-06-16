@@ -6,7 +6,7 @@ from .dataset import Dataset
 from .models import EdgeModel, InpaintingModel
 from .utils import Progbar, create_dir, stitch_images, imsave
 from .metrics import PSNR, EdgeAccuracy
-
+import cv2
 
 class EdgeConnect():
     def __init__(self, config, img):
@@ -98,7 +98,7 @@ class EdgeConnect():
 
             # inpaint model
             elif model == 2:
-                size = config.INPUT_SIZE
+                size = self.config.INPUT_SIZE
                 print(size)
                 images = cv2.resize(self.img, size)
                 print(images.shape)
