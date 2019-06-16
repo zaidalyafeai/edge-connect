@@ -102,7 +102,7 @@ class EdgeConnect():
                 print(size)
                 images = cv2.resize(self.img, (256, 256))
                 print(images.shape)
-                images = torch.FloatTensor([images])
+                images = torch.FloatTensor(images)
                 print(images.shape)
                 images = images.cuda() 
                 outputs = self.inpaint_model(images, edges, masks)
