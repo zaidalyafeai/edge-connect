@@ -84,31 +84,34 @@ class EdgeConnect():
 
         index = 0
         output_images = []
-        name = self.test_dataset.load_name(index)
-        images, images_gray, edges, masks = self.cuda(*items)
-        index += 1
-        # edge model
-        if model == 1:
-            outputs = self.edge_model(images_gray, edges, masks)
-            outputs_merged = (outputs * masks) + (edges * (1 - masks))
+        
+        for items in test_loader:
+            name = self.test_dataset.load_name(index)
+            images, images_gray, edges, masks = self.cuda(*items)
+            print(masks)
+            index += 1
+            # edge model
+            if model == 1:
+                outputs = self.edge_model(images_gray, edges, masks)
+                outputs_merged = (outputs * masks) + (edges * (1 - masks))
 
-        # inpaint model
-        elif model == 2:
-            outputs = self.inpaint_model(images, edges, masks)
-            outputs_merged = (outputs * masks) + (images * (1 - masks))
+            # inpaint model
+            elif model == 2:
+                outputs = self.inpaint_model(images, edges, masks)
+                outputs_merged = (outputs * masks) + (images * (1 - masks))
 
-        # inpaint with edge model / joint model
-        else:
-            edges = self.edge_model(images_gray, edges, masks).detach()
-            outputs = self.inpaint_model(images, edges, masks)
-            outputs_merged = (outputs * masks) + (images * (1 - masks))
+            # inpaint with edge model / joint model
+            else:
+                edges = self.edge_model(images_gray, edges, masks).detach()
+                outputs = self.inpaint_model(images, edges, masks)
+                outputs_merged = (outputs * masks) + (images * (1 - masks))
 
-        output = self.postprocess(outputs_merged)[0]
-        path = os.path.join(self.results_path, name)
-        print(index, name)
+            output = self.postprocess(outputs_merged)[0]
+            path = os.path.join(self.results_path, name)
+            print(index, name)
 
-        imsave(output, path)
-        output_images.append(output)
+            imsave(output, path)
+            output_images.append(output)
 
         if self.debug:
             edges = self.postprocess(1 - edges)[0]
