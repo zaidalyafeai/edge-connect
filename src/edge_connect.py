@@ -88,11 +88,12 @@ class EdgeConnect():
         for items in test_loader:
             name = self.test_dataset.load_name(index)
             images, images_gray, edges, masks = self.cuda(*items)
-            print(masks)
+            #print(masks)
             index += 1
             # edge model
             if model == 1:
                 outputs = self.edge_model(images_gray, edges, masks)
+                print(edges)
                 outputs_merged = (outputs * masks) + (edges * (1 - masks))
 
             # inpaint model
