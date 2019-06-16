@@ -9,7 +9,7 @@ from .metrics import PSNR, EdgeAccuracy
 import cv2
 
 class EdgeConnect():
-    def __init__(self, config, img):
+    def __init__(self, config):
         self.config = config
 
         if config.MODEL == 1:
@@ -28,7 +28,6 @@ class EdgeConnect():
 
         self.psnr = PSNR(255.0).to(config.DEVICE)
         self.edgeacc = EdgeAccuracy(config.EDGE_THRESHOLD).to(config.DEVICE)
-        self.img = img 
         
         # test mode
         if self.config.MODE == 2:
@@ -71,7 +70,7 @@ class EdgeConnect():
             self.edge_model.save()
             self.inpaint_model.save()
 
-    def test(self):
+    def test(self, img):
         self.edge_model.eval()
         self.inpaint_model.eval()
 
@@ -98,12 +97,8 @@ class EdgeConnect():
 
             # inpaint model
             elif model == 2:
-                size = self.config.INPUT_SIZE
-                print(size)
-                images = cv2.resize(self.img, (256, 256))[:,:,::-1]
-                print(images.shape)
+                images = cv2.resize(img, (256, 256))[:,:,::-1]
                 images = torch.FloatTensor([np.moveaxis(images, -1, 0)])
-                print(images.shape)
                 images = images.cuda() 
                 outputs = self.inpaint_model(images, edges, masks)
                 #outputs_merged = (outputs * masks) + (images * (1 - masks))
